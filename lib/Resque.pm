@@ -85,12 +85,16 @@ subtype 'Sugar::Redis'
     => as class_type('Redis');
 coerce 'Sugar::Redis'
     => from 'Str'
-    => via { Redis->new(
-        server    => $_,
-        reconnect => 60,
-        every     => 250,
-        encoding  => undef
-    )};
+        => via { Redis->new(
+            server    => $_,
+            reconnect => 60,
+            every     => 250,
+            encoding  => undef
+        )}
+    => from 'HashRef'
+        => via {
+            Redis->new(%$_);
+        };
 
 has redis => (
     is      => 'ro',
